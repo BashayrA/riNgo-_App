@@ -300,10 +300,11 @@ if page == 'Calculate Nutrition':
         
             st.write("**What is the number of servings you are having ?**")
             servings = st.text_input("servings")
+            dspy.Assert
+
             try:
                 with st.status("Downloading AI data..."):
                     st.write("Searching for data...")
-                    dspy.Assert
                     time.sleep(30)
                     #set model1
                     llm_model =dspy.LM('openai/deepseek-ai/DeepSeek-R1-Distill-Qwen-32B', api_key=open('secret.txt').read(), max_tokens=2000, temperature=0.4, api_base='https://api-inference.huggingface.co/v1/')
@@ -331,12 +332,9 @@ if page == 'Calculate Nutrition':
                     st.write("Displaying Nutritions...")
                     time.sleep(15)
 
-
-                show = st.button("Show Nutritions")
                 final_fact = fact2[fact2.rindex('Nutrition'):len(fact2)-1]
-                if show:
-                    with st.container(border=True): #container
-                        st.write(final_fact)
+                with st.container(border=True): #container
+                    st.write(final_fact)
             
             except Exception as e:
                 st.write("try again", e)
