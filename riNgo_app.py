@@ -195,6 +195,7 @@ st.logo(
     size='large',
 )
 
+dspy.Assert(result=True)
 
 with st.sidebar:
     st.write('Navigation')
@@ -261,23 +262,19 @@ if page == 'Calculate Nutrition':
         image_label = query(photo.read())
         
         try:
-            time.sleep(15) #waiting for resnet response
+            time.sleep(30) #waiting for resnet response
             # extracting the high scores only 
             food_component_resnet = []
             for i in range(len(image_label)):
                 if image_label[i]['score'] > 0.1:
                     food_component_resnet.append(image_label[i]['label'])   
         except:
-            time.sleep(30)
+            time.sleep(50)
             # extracting the high scores only 
             food_component_resnet = []
             for i in range(len(image_label)):
                 if image_label[i]['score'] > 0.1:
                     food_component_resnet.append(image_label[i]['label'])
-        
-        # write food on screen
-        st.write("**Your delicious dish has these ingredients:**")
-        st.write(f"{food_component_resnet}")
         
         # check if food label in food101 return fact from database else return model
         facts = []
@@ -300,12 +297,13 @@ if page == 'Calculate Nutrition':
         
             st.write("**What is the number of servings you are having ?**")
             servings = st.text_input("servings")
-            dspy.Assert
+            
 
             try:
                 with st.status("Downloading AI data..."):
                     st.write("Searching for data...")
-                    time.sleep(30)
+                    st.write("Taste Bud Trivia: Did you know that the average human has about **10,000** taste buds!")
+                    time.sleep(15)
                     #set model1
                     llm_model =dspy.LM('openai/deepseek-ai/DeepSeek-R1-Distill-Qwen-32B', api_key=open('secret.txt').read(), max_tokens=2000, temperature=0.4, api_base='https://api-inference.huggingface.co/v1/')
                     dspy.settings.configure(lm=llm_model)
@@ -315,7 +313,7 @@ if page == 'Calculate Nutrition':
                     fact1 = c.forward(food_labels=' '.join(food_component_resnet) + prompt_extend, serving_size=servings)
                     fact1 = str(fact1)
                     
-                    st.write("Did you know that The Small Intestine is Not So **Small!** Despite its name, the small intestine is 8about 6 meters*!")
+                    st.write("Did you know that The Small Intestine is Not So **Small!** Despite its name, the small intestine is *about 6 meters!*")
                     st.write("Detecting Ingredients..")
                     
                     time.sleep(50)
@@ -328,9 +326,8 @@ if page == 'Calculate Nutrition':
                     fact2 = c.forward(food_labels=' '.join(food_component_resnet) + prompt_extend, serving_size=servings, estimated_nutrition=[fact1])
                     fact2 = str(fact2)
                     
-                    st.write("Taste Bud Trivia: Did you know that the average human has about **10,000** taste buds!")
                     st.write("Displaying Nutritions...")
-                    time.sleep(15)
+
 
                 final_fact = fact2[fact2.rindex('Nutrition'):len(fact2)-1]
                 with st.container(border=True): #container
