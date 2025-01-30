@@ -331,7 +331,9 @@ if page == 'Calculate Nutrition':
 
                 final_fact = fact2[fact2.rindex('Nutrition'):len(fact2)-1]
                 with st.container(border=True): #container
-                    st.write(final_fact)
+                    display = final_fact.split('\\n')
+                    display = ' '.join(display)
+                    st.markdown(f"```\n{display}\n```")
             
             except Exception as e:
                 st.write("try again", e)
